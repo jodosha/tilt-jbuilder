@@ -88,9 +88,9 @@ module Tilt
     def prepare; end
 
     def evaluate(scope, locals, &block)
-      scope ||= Object.new
+      scope ||= BasicObject.new
       ::Tilt::Jbuilder.encode(scope) do |json|
-        context = scope.instance_eval { binding }
+        context = scope.instance_eval { ::Kernel.binding }
         set_locals(locals, scope, context)
         if data.kind_of?(Proc)
           return data.call(::Tilt::Jbuilder.new(scope))
@@ -103,9 +103,10 @@ module Tilt
     private
     def set_locals(locals, scope, context)
       view_path = options[:view_path]
-      scope.send(:instance_variable_set, '@_jbuilder_view_path', view_path)
-      scope.send(:instance_variable_set, '@_jbuilder_locals', locals)
-      scope.send(:instance_variable_set, '@_tilt_data', data)
+      scope.instance_exec(binding) {
+        @_jbuilder_view_path = view_path
+        @_jbuilder_locals = locals
+      }
       set_locals = locals.keys.map { |k| "#{k} = @_jbuilder_locals[#{k.inspect}]" }.join("\n")
       eval set_locals, context
     end

@@ -29,6 +29,11 @@ describe Tilt::JbuilderTemplate do
     "{\"author\":\"Anthony\"}".should == template.render(Object.new, :name => 'Anthony')
   end
 
+  it "should pass basic object locals" do
+    template = Tilt::JbuilderTemplate.new { "json.author name" }
+    "{\"author\":\"Anthony\"}".should == template.render(BasicObject.new, :name => 'Anthony')
+  end
+
   it "should evaluate in an object scope" do
     template = Tilt::JbuilderTemplate.new { "json.author @name" }
     scope = Object.new
