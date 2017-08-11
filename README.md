@@ -43,6 +43,14 @@ end
 template.render
 ```
 
+### Hanami
+
+Follow these steps:
+
+  1. Add `tilt-jbuilder` gem to your project.
+  1. Generate a template (eg: `apps/api/templates/events/index.json.jbuilder`)
+  1. Profit
+
 ## Contributing
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
